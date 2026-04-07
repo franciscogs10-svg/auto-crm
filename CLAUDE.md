@@ -1,8 +1,9 @@
 # CLAUDE.md — Auto-CRM
 
-> Este es un CRM completo y local que se personaliza a cada negocio.
+> CRM completo que se personaliza a cada negocio.
+> Funciona local (SQLite) o en la nube (Turso + Vercel).
 > Cuando un usuario abre este proyecto con Claude Code, tu trabajo es ayudarle a configurarlo,
-> usarlo, y expandirlo segun sus necesidades. Todo corre en su maquina — sin servicios externos.
+> usarlo, y expandirlo segun sus necesidades.
 
 ## Inicio rapido para el usuario
 
@@ -128,6 +129,26 @@ npm run dev
 npm run local  # build + init + start en puerto 3000
 ```
 
+### Turso + Vercel (cloud — acceso desde cualquier lugar)
+```bash
+# 1. Crear base de datos en Turso
+turso auth login
+turso db create auto-crm
+turso db show auto-crm --url        # → TURSO_DATABASE_URL
+turso db tokens create auto-crm     # → TURSO_AUTH_TOKEN
+
+# 2. Configurar env vars
+cp .env.local.example .env.local
+# Editar con los valores de Turso
+
+# 3. Inicializar tablas en Turso
+npm run init:seed
+
+# 4. Deploy en Vercel
+vercel --prod
+# Agregar TURSO_DATABASE_URL y TURSO_AUTH_TOKEN en Vercel > Settings > Env Vars
+```
+
 ### Docker
 ```bash
 docker compose up -d  # Corre en puerto 3000, datos persisten en ./data/
@@ -140,7 +161,11 @@ Agregar a `~/.claude/claude_desktop_config.json`:
   "mcpServers": {
     "auto-crm": {
       "command": "npx",
-      "args": ["tsx", "/ruta/al/proyecto/mcp/crm-server.ts"]
+      "args": ["tsx", "/ruta/al/proyecto/mcp/crm-server.ts"],
+      "env": {
+        "TURSO_DATABASE_URL": "libsql://your-db.turso.io",
+        "TURSO_AUTH_TOKEN": "your-token"
+      }
     }
   }
 }
@@ -148,6 +173,8 @@ Agregar a `~/.claude/claude_desktop_config.json`:
 
 ## Variables de entorno
 
+- `TURSO_DATABASE_URL` — Para cloud. URL de Turso (libsql://...). Sin esto, usa SQLite local
+- `TURSO_AUTH_TOKEN` — Para cloud. Token de autenticacion de Turso
 - `ANTHROPIC_API_KEY` — Opcional. Para IA en la interfaz web (clasificacion de leads)
 - `RESEND_API_KEY` — Opcional. Para enviar digest diario por email (resend.com, gratis)
 - `DIGEST_EMAIL` — Opcional. Email donde recibir el digest

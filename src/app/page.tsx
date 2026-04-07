@@ -1,22 +1,66 @@
+import Link from "next/link";
 import { db } from "@/db";
-import { contacts, deals, activities, pipelineStages } from "@/db/schema";
-import { eq, asc, desc } from "drizzle-orm";
+import {
+  contacts,
+  deals,
+  activities,
+  pipelineStages,
+  projects,
+  nextSteps,
+} from "@/db/schema";
+import { eq, asc, desc, and, isNull } from "drizzle-orm";
 import { KPICards } from "@/components/dashboard/KPICards";
 import { PipelineChart } from "@/components/dashboard/PipelineChart";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { NotificationBanner } from "@/components/dashboard/NotificationBanner";
+import { ProjectGrid } from "@/components/projects/ProjectGrid";
 import type { DashboardStats } from "@/types";
 
 export const dynamic = "force-dynamic";
 
-export default function DashboardPage() {
-  const allContacts = db.select().from(contacts).all();
-  const allDeals = db.select().from(deals).all();
-  const stages = db
+export default async function DashboardPage() {
+  // Active projects with nearest next step
+  const activeProjects = await db
+    .select()
+    .from(projects)
+    .where(eq(projects.status, "active"));
+
+  const enrichedProjects = await Promise.all(
+    activeProjects.map(async (project) => {
+      const [nearestStep] = await db
+        .select()
+        .from(nextSteps)
+        .where(
+          and(
+            eq(nextSteps.projectId, project.id),
+            isNull(nextSteps.completedAt)
+          )
+        )
+        .orderBy(asc(nextSteps.dueDate))
+        .limit(1);
+
+      return {
+        id: project.id,
+        name: project.name,
+        slug: project.slug,
+        type: project.type,
+        status: project.status,
+        description: project.description ?? "",
+        color: project.color,
+        icon: project.icon,
+        nextStep: nearestStep
+          ? { title: nearestStep.title, dueDate: nearestStep.dueDate ?? new Date() }
+          : undefined,
+      };
+    })
+  );
+
+  const allContacts = await db.select().from(contacts);
+  const allDeals = await db.select().from(deals);
+  const stages = await db
     .select()
     .from(pipelineStages)
-    .orderBy(asc(pipelineStages.order))
-    .all();
+    .orderBy(asc(pipelineStages.order));
 
   const activeDeals = allDeals.filter((d) => {
     const stage = stages.find((s) => s.id === d.stageId);
@@ -51,7 +95,7 @@ export default function DashboardPage() {
       color: stage.color,
     }));
 
-  const recentActivities = db
+  const recentActivities = await db
     .select({
       id: activities.id,
       type: activities.type,
@@ -62,8 +106,7 @@ export default function DashboardPage() {
     .from(activities)
     .leftJoin(contacts, eq(activities.contactId, contacts.id))
     .orderBy(desc(activities.createdAt))
-    .limit(5)
-    .all();
+    .limit(5);
 
   const isFirstRun = allContacts.length === 0 && allDeals.length === 0;
 
@@ -75,6 +118,21 @@ export default function DashboardPage() {
           Resumen de tu pipeline de ventas
         </p>
       </div>
+
+      {enrichedProjects.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Proyectos Activos</h2>
+            <Link
+              href="/projects"
+              className="text-sm text-primary hover:underline"
+            >
+              Ver todos
+            </Link>
+          </div>
+          <ProjectGrid projects={enrichedProjects} />
+        </div>
+      )}
 
       {isFirstRun && (
         <div className="rounded-lg border border-primary/20 bg-primary/5 p-6">

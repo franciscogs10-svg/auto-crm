@@ -9,11 +9,15 @@ import {
   Activity,
   Settings,
   Briefcase,
+  FolderKanban,
+  Bot,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/projects", label: "Proyectos", icon: FolderKanban },
+  { href: "/agents/organizador", label: "Agentes", icon: Bot },
   { href: "/pipeline", label: "Pipeline", icon: Kanban },
   { href: "/contacts", label: "Contactos", icon: Users },
   { href: "/deals", label: "Deals", icon: Briefcase },

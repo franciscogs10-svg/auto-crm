@@ -109,3 +109,81 @@ export interface DashboardStats {
   conversionRate: number;
   hotLeads: number;
 }
+
+// ── Projects ──────────────────────────────────────────────
+
+export type ProjectType = "personal" | "mixed" | "kn";
+export type ProjectStatus = "active" | "paused" | "pending" | "archived";
+export type NoteCategory = "idea" | "decision" | "reference" | "meeting";
+export type StepPriority = "low" | "medium" | "high" | "urgent";
+export type AgentName = "organizador" | "vigilante";
+export type AgentLogStatus = "unread" | "read" | "acted" | "dismissed";
+
+export interface Project {
+  id: string;
+  name: string;
+  slug: string;
+  type: ProjectType;
+  status: ProjectStatus;
+  description: string | null;
+  repos: string | null; // JSON array
+  kpis: string | null; // JSON object
+  color: string;
+  icon: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ProjectNote {
+  id: string;
+  projectId: string;
+  title: string;
+  content: string;
+  category: NoteCategory;
+  pinned: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface NextStep {
+  id: string;
+  projectId: string;
+  title: string;
+  description: string | null;
+  priority: StepPriority;
+  dueDate: Date | null;
+  completedAt: Date | null;
+  createdAt: Date;
+}
+
+export interface AgentLog {
+  id: string;
+  projectId: string | null;
+  agent: AgentName;
+  type: string;
+  summary: string;
+  payload: string | null; // JSON
+  status: AgentLogStatus;
+  createdAt: Date;
+}
+
+export interface ProjectWithStats extends Project {
+  nextStep?: NextStep | null;
+  lastActivity?: Date | null;
+  alertCount?: number;
+  contactCount?: number;
+  dealCount?: number;
+  pipelineValue?: number;
+}
+
+export interface VoiceParseResult {
+  project: string; // slug
+  actionType: "note" | "next_step" | "activity" | "contact" | "deal";
+  content: {
+    title: string;
+    description?: string;
+    priority?: StepPriority;
+    dueDate?: string;
+  };
+  confidence: number;
+}
