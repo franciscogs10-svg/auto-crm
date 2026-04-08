@@ -11,6 +11,7 @@ import {
   Briefcase,
   FolderKanban,
   Bot,
+  Lightbulb,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +23,7 @@ const navItems = [
   { href: "/contacts", label: "Contactos", icon: Users },
   { href: "/deals", label: "Deals", icon: Briefcase },
   { href: "/activities", label: "Actividades", icon: Activity },
+  { href: "/discovery", label: "Discovery", icon: Lightbulb },
   { href: "/settings", label: "Configuracion", icon: Settings },
 ];
 
