@@ -9,6 +9,26 @@ fbrain_get("how-francisco-works")  → Cómo trabaja Francisco, reglas, estilo
 ```
 **Al final de cada sesión importante**, guardar progreso en fbrain.
 
+## SKILLS — Usar automáticamente según la tarea
+
+No esperar a que Francisco pida un skill. Usarlos proactivamente cuando la situación lo requiera:
+
+| Cuándo | Skill | Por qué |
+|--------|-------|---------|
+| Antes de explorar código o entender estructura | `/smart-explore` | Mapea AST, funciones, dependencias |
+| Antes de implementar algo no trivial | `/make-plan` | Diseña el approach con fases |
+| Para ejecutar un plan ya aprobado | `/do` | Ejecuta fase por fase con subagentes |
+| Después de completar una fase o milestone | `/sync` | Actualiza estado compartido |
+| Cuando hay UI/UX que diseñar o revisar | `/ui-ux-pro-max` | Estilos, paletas, componentes |
+| Para investigar tendencias o herramientas | `/last30days` | Búsqueda multi-plataforma |
+| Para humanizar texto | `/humanizalo` | Elimina tells de AI |
+| Para buscar trabajo de sesiones anteriores | `/mem-search` | Memoria persistente |
+| Después de crear un entregable | `/feedback` | Captura qué funcionó |
+| Para consolidar memoria | `/dream` | Limpia y compacta |
+| Para proteger info sensible | `/brain-guard` | No exponer info privada |
+
+**Regla**: Si vas a hacer algo que un skill hace mejor, usá el skill.
+
 ---
 
 > CRM completo que se personaliza a cada negocio.
