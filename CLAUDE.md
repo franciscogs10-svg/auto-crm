@@ -1,5 +1,16 @@
 # CLAUDE.md — Auto-CRM
 
+## CEREBRO — Leer al inicio de cada sesión
+
+**SIEMPRE al arrancar una sesión nueva**, consultar fbrain para contexto actualizado:
+```
+fbrain_get("auto-crm")            → Estado actual del proyecto
+fbrain_get("how-francisco-works")  → Cómo trabaja Francisco, reglas, estilo
+```
+**Al final de cada sesión importante**, guardar progreso en fbrain.
+
+---
+
 > CRM completo que se personaliza a cada negocio.
 > Funciona local (SQLite) o en la nube (Turso + Vercel).
 > Cuando un usuario abre este proyecto con Claude Code, tu trabajo es ayudarle a configurarlo,
