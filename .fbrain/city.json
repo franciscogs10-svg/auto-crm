@@ -4,7 +4,16 @@
   "type": "saas-crm",
   "autonomia_level": "full",
   "gabinete_local": [
-    "ventas"
+    "ventas",
+    "crm",
+    "customer-success",
+    "marketing",
+    "finanzas",
+    "legal",
+    "ingenieria",
+    "it-devops",
+    "producto",
+    "research"
   ],
   "kpis": {
     "leads_activos": 0,
