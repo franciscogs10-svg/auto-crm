@@ -1,0 +1,18 @@
+{
+  "city": "auto-crm",
+  "mayor": "Aaron-IA",
+  "type": "saas-crm",
+  "autonomia_level": "full",
+  "gabinete_local": [
+    "ventas"
+  ],
+  "kpis": {
+    "leads_activos": 0,
+    "conversion_rate": null,
+    "mrr": null,
+    "churn_rate": null
+  },
+  "autoridad_federal": "fbrain",
+  "kit_version": "0.1.0",
+  "created_at": "2026-04-25T20:10:46.747318+00:00"
+}
